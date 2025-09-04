@@ -22,9 +22,13 @@ func main() {
 	}
 	defer pool.Close()
 
+	// Worker 登録（Insert-only クライアントでも必要）
+	workers := river.NewWorkers()
+	river.AddWorker(workers, &jobs.EmailWorker{})
+
 	// Insert-only クライアント（Start しない）
 	rClient, err := river.NewClient(riverpgxv5.New(pool), &river.Config{
-		Workers: river.NewWorkers(), // 検証のために Worker 定義は渡しておくと安全
+		Workers: workers,
 	})
 	if err != nil {
 		log.Fatalf("river.NewClient: %v", err)

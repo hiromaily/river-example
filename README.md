@@ -17,3 +17,7 @@ make run-worker
 # run producer to send job
 make run-producer
 ```
+
+## admin page
+
+access to [http://localhost:8080/](http://localhost:8080/)
