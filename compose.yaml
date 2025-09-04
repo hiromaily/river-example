@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: river
+    ports:
+      - "15432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  riverui:
+    image: ghcr.io/riverqueue/riverui:latest
+    depends_on:
+      - db
+    environment:
+      # UI から DB に接続する URL（ホスト名はサービス名 db）
+      DATABASE_URL: postgres://postgres:postgres@db:5432/river?sslmode=disable
+    ports:
+      - "8080:8080"
